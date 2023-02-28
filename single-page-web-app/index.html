@@ -16,6 +16,60 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
     <script>
+      $(document).ready(function(){
+        $.get("/api/login").done(function(data){
+          SetMessage(data);
+          HookViewElement(data);
+        })
+        function HookViewElement(data){
+          $("#register-toggle-btn").click(function(event){
+            event.preventDefault();
+            $.get("/api/register").done(function(respData){
+              SetMessage(respData);
+              HookViewElement(respData);
+            })
+          });
+          $("#login-btn").click(function(event){
+            event.preventDefault();
+            $.post("/api/login",{
+              username: $("#login-username").val(),
+              password: $("#login-password").val()//deserialize
+            }).done(function(resData){
+              SetMessage(resData);
+              HookViewElement(resData);
+            });
+          });
+          $("#register-btn").click(function(event){
+            event.preventDefault();
+            $.post("/api/registeer", {
+              username: $("#register-username").val(),
+              password1: $("#register-password-1").val(),
+              password2: $("#register-password-2").val(),
+            }).done(function(respData){
+              SetMessage(respData);
+              HookViewElement(respData);
+            })
+          });
+          $("#login-toggle-btn").click(function(event){
+            event.preventDefault();
+            $.get("/api/login").done(function(respdata){
+              SetMessage(respData);
+              HookViewElement(respData);
+            });
+          });
+          $("#logout-bt").click(function(event){
+            event.preventDefault();
+            $.get("/api/login").done(function(respdata){
+              SetMessage(respData);
+              HookViewElement(respData);
+            });
+          })
+        }
+
+        function SetMessage(data){
+          $("#message-tag").text(data.message);
+        }
+      })
         window.addEventListener('DOMContentLoaded', (event) => {
             $.ajax({
                 url: "/api/login"
